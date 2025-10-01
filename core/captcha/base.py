@@ -16,10 +16,15 @@ class CaptchaSolverBase:
         self.soft_id = soft_id
 
         self.base_url = base_url.rstrip("/")
-        self.client = httpx.AsyncClient(timeout=10)
+        self.client = httpx.AsyncClient(timeout=30)
 
     async def solve_turnistale(self, site_key: str, page_url: str) -> tuple[bool, Optional[str]] | tuple[bool, str]:
-        captcha_type = "TurnstileTaskProxyless" if not self.base_url == "https://api.capsolver.com" else "AntiTurnstileTaskProxyLess"
+        CAPTCHA_TYPE_MAP = {
+            "https://api.capsolver.com": "AntiTurnstileTaskProxyLess",
+            "https://api.capmonster.cloud": "TurnstileTask",
+        }
+
+        captcha_type = CAPTCHA_TYPE_MAP.get(self.base_url, "TurnstileTaskProxyless")
 
         captcha_data = {
             "clientKey": self.api_key,
@@ -52,7 +57,12 @@ class CaptchaSolverBase:
 
 
     async def solve_geetest(self, page_url: str, gt: str, challenge: str, init_params: dict, version: int = 4) -> tuple[bool, Optional[str]] | tuple[bool, str]:
-        captcha_type = "TurnstileTaskProxyless" if not self.base_url == "https://api.capsolver.com" else "AntiTurnstileTaskProxyLess"
+        CAPTCHA_TYPE_MAP = {
+            "https://api.capsolver.com": "AntiTurnstileTaskProxyLess",
+            "https://api.capmonster.cloud": "GeeTestTask",
+        }
+
+        captcha_type = CAPTCHA_TYPE_MAP.get(self.base_url, "TurnstileTaskProxyless")
 
         captcha_data = {
             "clientKey": self.api_key,
@@ -65,6 +75,10 @@ class CaptchaSolverBase:
                 "initParameters": init_params
             }
         }
+
+        # challenge data not required for V4 Capmonster GeeTestTask - removed
+        if captcha_type == "GeeTestTask": 
+            captcha_data["task"].pop("challenge", None)
 
         if self.soft_id is not None:
             captcha_data["softId"] = self.soft_id

@@ -44,7 +44,7 @@ captcha_settings:
   two_captcha_api_key: ""
   anti_captcha_api_key: ""
   capsolver_api_key: ""
-
+  capmonster_api_key: ""
 
 all_in_one_settings:
   tasks_to_perform: # Tasks to perform in all-in-one module, you can choose any combination of tasks
