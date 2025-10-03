@@ -21,4 +21,7 @@ captcha_solver = SolviumCaptchaSolver(
 ) if config.captcha_settings.captcha_solver == "anti_captcha" else CapsolverSolver(
     api_key=config.captcha_settings.capsolver_api_key,
     max_attempts=config.captcha_settings.max_captcha_solving_time // 3
-) if config.captcha_settings.captcha_solver == "capsolver" else None
+) if config.captcha_settings.captcha_solver == "capsolver" else CapmonsterSolver(
+    api_key=config.captcha_settings.capmonster_api_key,
+    max_attempts=config.captcha_settings.max_captcha_solving_time // 3
+) if config.captcha_settings.captcha_solver == "capmonster" else None

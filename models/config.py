@@ -71,6 +71,7 @@ class CaptchaSettings:
     two_captcha_api_key: str = ""
     anti_captcha_api_key: str = ""
     capsolver_api_key: str = ""
+    capmonster_api_key: str = ""
     max_captcha_solving_time: PositiveInt = 60
 
 
